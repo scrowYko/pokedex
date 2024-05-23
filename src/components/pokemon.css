@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "Pokemon";
+    src: 
+    local("Pokemon"),
+    url('./PokemonSolid.ttf') format("truetype");
+}
+
+.pokemon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Pokemon";
+    text-transform:capitalize;
+}
+
+.pokemon img{
+    height: calc(50vh);
+    width: 50vh;
+    object-fit:cover;
+}
+
+#name {
+    height: calc(10vh);
+    font-size: calc(10vh);
+}
+.buttons{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    margin-left: calc(25vw);
+    margin-right: calc(25vw);
+    padding: 30px;
+}
