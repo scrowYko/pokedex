@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import './pokemon.css'
+import "./pokemon.css";
+import pokeball from "pokeball.jpg";
+import pokemon from "./Pokemon";
 
 export default function Pokedex() {
   const [id, setId] = useState(1); //iniciando id com valor 1
@@ -15,32 +17,43 @@ export default function Pokedex() {
     }
   };
 
+  const [Carregando, setCarregando] = useState(true);
+  const Loader = pokeball;
+  function setTimer() {
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setCarregando(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }, []);
+  };
+
   useEffect(() => {
     fetchData();
   }, [id]);
 
-   const nextPokemon = () => {
-    setId(id+ 1)
-   }
-   const previousPokemon = () => {
-    try{ setId(id- 1)} catch (error) {
-        console.error("Não tem pokemon anterior", error);
-    }0
-   }
+  const nextPokemon = () => {
+    setId(id + 1);
+    setTimer()
+  };
+  const previousPokemon = () => {
+    try {
+      setId(id - 1);
+      setTimer()
+    } catch (error) {
+      console.error("Não tem pokemon anterior", error);
+    }
+    0;
+  };
 
   return (
     <>
       <div>
-        {pokemon && (
-          <div className="pokemon">
-            <p id="name">{pokemon.name}</p>
-            <img src={pokemon.sprites.front_default} alt="{pokemon.name}" />
-            
-            <div className="buttons">
-            <button onClick={previousPokemon}>Anterior</button>
-            <button onClick={nextPokemon}>Proximo</button></div>
-          </div>
+      { Carregando ? (<Loader/>):( {pokemon && (
+          
         )}
+        )
+      };
       </div>
     </>
   );
