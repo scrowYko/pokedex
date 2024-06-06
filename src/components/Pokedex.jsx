@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import "./pokemon.css";
-import pokeball from "pokeball.jpg";
-import pokemon from "./Pokemon";
 
 export default function Pokedex() {
   const [id, setId] = useState(1); //iniciando id com valor 1
@@ -18,28 +17,45 @@ export default function Pokedex() {
   };
 
   const [Carregando, setCarregando] = useState(true);
-  const Loader = pokeball;
-  function setTimer() {
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setCarregando(false);
-      }, 500);
-      return () => clearTimeout(timer);
-    }, []);
-  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCarregando(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, [id]);
 
+  const loadingNext = () => {
+    setCarregando(true);
+    let timerN = setTimeout(() => {
+      setCarregando(false);
+      nextPokemon();
+    }, 500);
+    return () => clearTimeout(timerN);
+  };
+
+  const loadingPrevious = () => {
+    if (id - 1 > 0) {
+      setCarregando(true);
+        let timerP = setTimeout(() => {
+          setCarregando(false);
+          previousPokemon();
+        }, 500);
+        return () => clearTimeout(timerP);
+    } else alert("Não tem pokemon antes deste");
+  };
+
   const nextPokemon = () => {
     setId(id + 1);
-    setTimer()
   };
+
   const previousPokemon = () => {
     try {
       setId(id - 1);
-      setTimer()
     } catch (error) {
       console.error("Não tem pokemon anterior", error);
     }
@@ -49,11 +65,28 @@ export default function Pokedex() {
   return (
     <>
       <div>
-      { Carregando ? (<Loader/>):( {pokemon && (
-          
+        {pokemon && (
+          <div className="pokemon">
+            {Carregando ? (
+              <motion.img
+                src="./pokebola.png"
+                id="spinner"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.7, repeat: Infinity, ease: "linear" }}
+              />
+            ) : (
+              <div className="div">
+                <p id="name">{pokemon.name}</p>
+                <img src={pokemon.sprites.front_default} alt="{pokemon.name}" />
+              </div>
+            )}
+
+            <div className="buttons">
+              <button onClick={loadingPrevious}>Anterior</button>
+              <button onClick={loadingNext}>Proximo</button>
+            </div>
+          </div>
         )}
-        )
-      };
       </div>
     </>
   );
